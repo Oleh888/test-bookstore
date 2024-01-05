@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.book.store.domain.BookEntity;
@@ -16,8 +17,16 @@ import org.junit.jupiter.api.Test;
 class BookIT extends AbstractIT {
 
   @Test
-  void saveBookShouldRespondCreated() {
+  void shouldRespondUnauthorizedWhenTokenIsMissed() {
     buildRestAssured().when()
+            .post("/api/books")
+            .then().assertThat().log().all()
+            .statusCode(UNAUTHORIZED.value());
+  }
+
+  @Test
+  void saveBookShouldRespondCreated() {
+    buildRestAssuredWithTestToken().when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {
@@ -39,7 +48,7 @@ class BookIT extends AbstractIT {
   void getBookByIdShouldRespondOk() {
     var book = saveBook("Clean Code", "Robert C. Martin", BigDecimal.valueOf(555.55), 2020);
 
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken().when()
             .get("/api/books/%s".formatted(book.getId()))
             .then().assertThat().log().all()
             .statusCode(OK.value())
@@ -51,7 +60,7 @@ class BookIT extends AbstractIT {
 
   @Test
   void getBookByIdShouldRespondNotFount() {
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken().when()
             .get("/api/books/unknown")
             .then().assertThat().log().all()
             .statusCode(NOT_FOUND.value())
@@ -61,7 +70,7 @@ class BookIT extends AbstractIT {
 
   @Test
   void getBooksShouldRespondOkWithEmptyList() {
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken().when()
             .get("/api/books")
             .then().assertThat().log().all()
             .statusCode(OK.value())
@@ -73,7 +82,7 @@ class BookIT extends AbstractIT {
     saveBook("Clean Code", "Robert C. Martin", BigDecimal.valueOf(555.55), 2020);
     saveBook("Clean Architecture", "Robert C. Martin", BigDecimal.valueOf(600.00f), 2021);
 
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken().when()
             .get("/api/books")
             .then().assertThat().log().all()
             .statusCode(OK.value())
@@ -94,7 +103,7 @@ class BookIT extends AbstractIT {
   void deleteBookByIdShouldRespondOk() {
     var book = saveBook("Clean Code", "Robert C. Martin", BigDecimal.valueOf(555.55), 2020);
 
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken().when()
             .delete("/api/books/%s".formatted(book.getId()))
             .then().assertThat().log().all()
             .statusCode(OK.value());
@@ -102,7 +111,7 @@ class BookIT extends AbstractIT {
 
   @Test
   void deleteBookByIdShouldRespondNotFount() {
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken().when()
             .delete("/api/books/unknown")
             .then().assertThat().log().all()
             .statusCode(NOT_FOUND.value())
@@ -112,7 +121,7 @@ class BookIT extends AbstractIT {
 
   @Test
   void updateBookByIdShouldRespondNotFount() {
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken().when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {
@@ -132,7 +141,7 @@ class BookIT extends AbstractIT {
   void updateBookByIdShouldRespondOk() {
     var book = saveBook("Clean Architecture", "Robert C. Martin", BigDecimal.valueOf(600.00f), 2021);
 
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken().when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {

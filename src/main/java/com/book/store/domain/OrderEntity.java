@@ -34,7 +34,7 @@ public class OrderEntity {
   private Instant orderDate;
 
   @OneToMany
-  @JoinColumn(name = "id")
+  @JoinColumn(name = "order_id")
   private List<BookEntity> books;
 
 }

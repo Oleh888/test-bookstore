@@ -2,6 +2,7 @@ package com.book.store.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +19,7 @@ public class UserEntity {
   @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
 
+  @Column(unique = true)
   private String username;
 
   private String password;

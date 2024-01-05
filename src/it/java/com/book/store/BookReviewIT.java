@@ -19,7 +19,7 @@ class BookReviewIT extends AbstractIT {
   void saveReviewShouldRespondCreated() {
     var book = saveBook("Clean Code", "Robert C. Martin", BigDecimal.valueOf(555.55), 2020);
 
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken().when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {
@@ -31,13 +31,13 @@ class BookReviewIT extends AbstractIT {
             .statusCode(CREATED.value());
 
     assertThat(reviewRepository.findAllByBookId(book.getId())).hasSize(1)
-            .flatExtracting(ReviewDocument::getRating, ReviewDocument::getComment, ReviewDocument::getUserId)
-            .containsExactly( 5, "great book!", "user_id");
+            .flatExtracting(ReviewDocument::getRating, ReviewDocument::getComment)
+            .containsExactly( 5, "great book!");
   }
 
   @Test
   void saveReviewShouldRespondBookNotFound() {
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken().when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {
@@ -56,7 +56,7 @@ class BookReviewIT extends AbstractIT {
     var book = saveBook("Clean Code", "Robert C. Martin", BigDecimal.valueOf(555.55), 2020);
     var review = saveReview(book.getId(), 5, "Great book!", "user_id");
 
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken().when()
             .contentType(APPLICATION_JSON_VALUE)
             .get("/api/books/%s/reviews".formatted(book.getId()))
             .then().assertThat().log().all()

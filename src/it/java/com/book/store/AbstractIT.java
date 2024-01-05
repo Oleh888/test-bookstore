@@ -1,5 +1,6 @@
 package com.book.store;
 
+import com.book.store.auth.JwtHandler;
 import com.book.store.domain.BookEntity;
 import com.book.store.domain.OrderEntity;
 import com.book.store.domain.ReviewDocument;
@@ -44,17 +45,29 @@ public abstract class AbstractIT {
   @Autowired
   protected UserRepository userRepository;
 
+  @Autowired
+  protected JwtHandler jwtHandler;
+
   @BeforeEach
   void reset() {
+    orderRepository.deleteAll();
     userRepository.deleteAll();
     bookRepository.deleteAll();
     reviewRepository.deleteAll();
     userActivityLogRepository.deleteAll();
-    orderRepository.deleteAll();
   }
 
   protected RequestSpecification buildRestAssured() {
     return RestAssured.given().port(port);
+  }
+
+  protected RequestSpecification buildRestAssuredWithTestToken() {
+    return RestAssured.given().port(port)
+            .header("X-ACCESS-TOKEN", generateAccessTokenForUser(saveUser("Bob", "password")));
+  }
+
+  protected RequestSpecification buildRestAssuredWithTestToken(UserEntity user) {
+    return RestAssured.given().port(port).header("X-ACCESS-TOKEN", generateAccessTokenForUser(user));
   }
 
   protected BookEntity saveBook(String title, String author, BigDecimal price, Integer publicationYear) {
@@ -97,5 +110,9 @@ public abstract class AbstractIT {
     user.setUsername(usernmae);
     user.setPassword(password);
     return userRepository.save(user);
+  }
+
+  protected String generateAccessTokenForUser(UserEntity user) {
+    return jwtHandler.generateToken(user.getId());
   }
 }

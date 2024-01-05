@@ -1,1 +1,4 @@
-
+auth:
+  key: c2VjcmV0LWtleQ==
+  token:
+    expiration: 8

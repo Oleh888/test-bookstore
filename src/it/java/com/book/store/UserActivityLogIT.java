@@ -15,7 +15,9 @@ class UserActivityLogIT extends AbstractIT {
 
   @Test
   void logUserActivityShouldRespondCreated() {
-    buildRestAssured().when()
+    var user = saveUser("Bob", "password");
+
+    buildRestAssuredWithTestToken(user).when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {
@@ -27,7 +29,7 @@ class UserActivityLogIT extends AbstractIT {
             .statusCode(CREATED.value());
 
     assertThat(userActivityLogRepository.findAll()).hasSize(1).element(0)
-            .hasFieldOrPropertyWithValue("userId", "user_id")
+            .hasFieldOrPropertyWithValue("userId", user.getId())
             .extracting(UserActivityLogDocument::getActivityLogs)
             .asList()
             .hasSize(1)
@@ -38,9 +40,10 @@ class UserActivityLogIT extends AbstractIT {
 
   @Test
   void logUserActivityShouldAppendLogAndRespondCreated() {
-    saveUserActivityLog("user_id", "User left a comment", "comment");
+    var user = saveUser("Bob", "password");
+    saveUserActivityLog(user.getId(), "User left a comment", "comment");
 
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken(user).when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {
@@ -52,7 +55,7 @@ class UserActivityLogIT extends AbstractIT {
             .statusCode(CREATED.value());
 
     assertThat(userActivityLogRepository.findAll()).hasSize(1).element(0)
-            .hasFieldOrPropertyWithValue("userId", "user_id")
+            .hasFieldOrPropertyWithValue("userId", user.getId())
             .extracting(UserActivityLogDocument::getActivityLogs)
             .asList()
             .hasSize(2)
@@ -62,9 +65,10 @@ class UserActivityLogIT extends AbstractIT {
 
   @Test
   void getUserActivityLogsShouldRespondOk() {
-    saveUserActivityLog("user_id", "User left a comment", "comment");
+    var user = saveUser("Bob", "password");
+    saveUserActivityLog(user.getId(), "User left a comment", "comment");
 
-    buildRestAssured().when()
+    buildRestAssuredWithTestToken(user).when()
             .contentType(APPLICATION_JSON_VALUE)
             .get("/api/users/activity-log")
             .then().assertThat().log().all()

@@ -1,6 +1,6 @@
 package com.book.store.service;
 
-import com.book.store.auth.AuthenticationException;
+import com.book.store.exception.UserNotFoundException;
 import com.book.store.mapper.OrderMapper;
 import com.book.store.repository.BookRepository;
 import com.book.store.repository.OrderRepository;
@@ -21,8 +21,8 @@ public class OrderService {
   public void saveOrder(OrderDto orderDto, String userId) {
     orderRepository.save(orderMapper.toOrderEntity(
             bookRepository.findAllById(orderDto.bookIds()),
-            userRepository.findById(userId).orElseThrow(() -> new AuthenticationException(userId))
-    ));
+            userRepository.findById(userId).orElseThrow(UserNotFoundException::new))
+    );
   }
 
   public List<OrderDto> getAllOrders(String userId) {
