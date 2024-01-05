@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface BookReviewMapper {
 
-  @Mapping(target = "timestamp", expression = "java(System.currentTimeMillis())")
+  @Mapping(target = "userId", source = "userId")
   ReviewDocument toReviewDocument(BookReviewService.BookReviewDto reviewDto, String userId);
 
   BookReviewService.BookReviewDto toBookReviewDto(ReviewDocument reviewDocument);

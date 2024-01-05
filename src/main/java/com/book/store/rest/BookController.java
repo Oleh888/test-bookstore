@@ -43,7 +43,7 @@ public class BookController {
   @ResponseStatus(HttpStatus.CREATED)
   public void saveBook(@RequestBody SaveBookRequest request) {
     log.debug("Received save book request: {}", request);
-    bookService.saveBook(bookMapper.toBookModel(request));
+    bookService.saveBook(bookMapper.toBookDto(request));
   }
 
   @DeleteMapping(value = "{id}")
@@ -54,7 +54,7 @@ public class BookController {
   @PutMapping(value = "{id}", consumes = APPLICATION_JSON_VALUE)
   public void updateBook(@PathVariable String id, @RequestBody SaveBookRequest request) {
     log.debug("Received update book request: {}", request);
-    bookService.updateBook(bookMapper.toBookModel(request), id);
+    bookService.updateBook(bookMapper.toBookDto(request), id);
   }
 
   public record BookResponse(String id, String title, String author, BigDecimal price,

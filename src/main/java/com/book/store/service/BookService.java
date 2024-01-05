@@ -21,15 +21,12 @@ public class BookService {
 
   public BookDto getBookById(String id) {
     return bookRepository.findById(id)
-            .map(bookMapper::toBookModel)
+            .map(bookMapper::toBookDto)
             .orElseThrow(() -> new BookNotFoundException(id));
   }
 
   public List<BookDto> getAllBooks() {
-    return bookRepository.findAll()
-            .stream()
-            .map(bookMapper::toBookModel)
-            .toList();
+    return bookMapper.toBookDto(bookRepository.findAll());
   }
 
   public void deleteBook(String id) {

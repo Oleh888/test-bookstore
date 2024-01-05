@@ -10,39 +10,14 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.book.store.domain.BookEntity;
-import com.book.store.repository.BookRepository;
 import java.math.BigDecimal;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
-import org.springframework.test.context.ActiveProfiles;
-import io.restassured.RestAssured;
 
-@ActiveProfiles("it")
-@AutoConfigureWireMock(port = 0)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class BookIT {
-
-  @LocalServerPort
-  private int port;
-
-
-  @Autowired
-  private BookRepository bookRepository;
-
-  @BeforeEach
-  void reset() {
-    bookRepository.deleteAll();
-  }
+class BookIT extends AbstractIT {
 
   @Test
   void saveBookShouldRespondCreated() {
-
-    RestAssured.given().port(port)
-            .when()
+    buildRestAssured().when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {
@@ -64,8 +39,7 @@ class BookIT {
   void getBookByIdShouldRespondOk() {
     var book = saveBook("Clean Code", "Robert C. Martin", BigDecimal.valueOf(555.55), 2020);
 
-    RestAssured.given().port(port)
-            .when()
+    buildRestAssured().when()
             .get("/api/books/%s".formatted(book.getId()))
             .then().assertThat().log().all()
             .statusCode(OK.value())
@@ -77,8 +51,7 @@ class BookIT {
 
   @Test
   void getBookByIdShouldRespondNotFount() {
-    RestAssured.given().port(port)
-            .when()
+    buildRestAssured().when()
             .get("/api/books/unknown")
             .then().assertThat().log().all()
             .statusCode(NOT_FOUND.value())
@@ -88,8 +61,7 @@ class BookIT {
 
   @Test
   void getBooksShouldRespondOkWithEmptyList() {
-    RestAssured.given().port(port)
-            .when()
+    buildRestAssured().when()
             .get("/api/books")
             .then().assertThat().log().all()
             .statusCode(OK.value())
@@ -101,8 +73,7 @@ class BookIT {
     saveBook("Clean Code", "Robert C. Martin", BigDecimal.valueOf(555.55), 2020);
     saveBook("Clean Architecture", "Robert C. Martin", BigDecimal.valueOf(600.00f), 2021);
 
-    RestAssured.given().port(port)
-            .when()
+    buildRestAssured().when()
             .get("/api/books")
             .then().assertThat().log().all()
             .statusCode(OK.value())
@@ -123,8 +94,7 @@ class BookIT {
   void deleteBookByIdShouldRespondOk() {
     var book = saveBook("Clean Code", "Robert C. Martin", BigDecimal.valueOf(555.55), 2020);
 
-    RestAssured.given().port(port)
-            .when()
+    buildRestAssured().when()
             .delete("/api/books/%s".formatted(book.getId()))
             .then().assertThat().log().all()
             .statusCode(OK.value());
@@ -132,8 +102,7 @@ class BookIT {
 
   @Test
   void deleteBookByIdShouldRespondNotFount() {
-    RestAssured.given().port(port)
-            .when()
+    buildRestAssured().when()
             .delete("/api/books/unknown")
             .then().assertThat().log().all()
             .statusCode(NOT_FOUND.value())
@@ -143,8 +112,7 @@ class BookIT {
 
   @Test
   void updateBookByIdShouldRespondNotFount() {
-    RestAssured.given().port(port)
-            .when()
+    buildRestAssured().when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {
@@ -164,8 +132,7 @@ class BookIT {
   void updateBookByIdShouldRespondOk() {
     var book = saveBook("Clean Architecture", "Robert C. Martin", BigDecimal.valueOf(600.00f), 2021);
 
-    RestAssured.given().port(port)
-            .when()
+    buildRestAssured().when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {
@@ -181,14 +148,5 @@ class BookIT {
     assertThat(bookRepository.findById(book.getId())).isNotEmpty().get()
             .extracting(BookEntity::getTitle, BookEntity::getAuthor, BookEntity::getPrice, BookEntity::getPublicationYear)
             .containsExactly("Clean Code", "Robert C. Martin", BigDecimal.valueOf(650.50), 2020);
-  }
-
-  private BookEntity saveBook(String title, String author, BigDecimal price, Integer publicationYear) {
-    var entity = new BookEntity();
-    entity.setTitle(title);
-    entity.setAuthor(author);
-    entity.setPrice(price);
-    entity.setPublicationYear(publicationYear);
-    return bookRepository.saveAndFlush(entity);
   }
 }

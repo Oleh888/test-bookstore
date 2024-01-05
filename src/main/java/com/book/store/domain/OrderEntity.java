@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +30,7 @@ public class OrderEntity {
   private UserEntity user;
 
   @Column(name = "order_date")
+  @CreationTimestamp
   private Instant orderDate;
 
   @OneToMany

@@ -1,8 +1,10 @@
 package com.book.store.domain;
 
+import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -10,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Getter
 @Setter
-@Document(collation = "review")
+@Document(collection = "reviews")
 public class ReviewDocument {
 
   @MongoId
@@ -28,5 +30,6 @@ public class ReviewDocument {
 
   private String comment;
 
-  private Long timestamp;
+  @CreatedDate
+  private Instant timestamp;
 }
