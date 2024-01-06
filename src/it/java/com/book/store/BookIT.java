@@ -17,7 +17,7 @@ class BookIT extends AbstractIT {
 
   @Test
   void saveBookShouldRespondCreated() {
-    buildRestAssuredWithTestToken().when()
+    buildRestAssured().when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {
@@ -39,7 +39,7 @@ class BookIT extends AbstractIT {
   void getBookByIdShouldRespondOk() {
     var book = saveBook("Clean Code", "Robert C. Martin", BigDecimal.valueOf(555.55), 2020);
 
-    buildRestAssuredWithTestToken().when()
+    buildRestAssured().when()
             .get("/api/books/%s".formatted(book.getId()))
             .then().assertThat().log().all()
             .statusCode(OK.value())
@@ -51,7 +51,7 @@ class BookIT extends AbstractIT {
 
   @Test
   void getBookByIdShouldRespondNotFount() {
-    buildRestAssuredWithTestToken().when()
+    buildRestAssured().when()
             .get("/api/books/unknown")
             .then().assertThat().log().all()
             .statusCode(NOT_FOUND.value())
@@ -61,7 +61,7 @@ class BookIT extends AbstractIT {
 
   @Test
   void getBooksShouldRespondOkWithEmptyList() {
-    buildRestAssuredWithTestToken().when()
+    buildRestAssured().when()
             .get("/api/books")
             .then().assertThat().log().all()
             .statusCode(OK.value())
@@ -73,7 +73,7 @@ class BookIT extends AbstractIT {
     saveBook("Clean Code", "Robert C. Martin", BigDecimal.valueOf(555.55), 2020);
     saveBook("Clean Architecture", "Robert C. Martin", BigDecimal.valueOf(600.00f), 2021);
 
-    buildRestAssuredWithTestToken().when()
+    buildRestAssured().when()
             .get("/api/books")
             .then().assertThat().log().all()
             .statusCode(OK.value())
@@ -94,7 +94,7 @@ class BookIT extends AbstractIT {
   void deleteBookByIdShouldRespondOk() {
     var book = saveBook("Clean Code", "Robert C. Martin", BigDecimal.valueOf(555.55), 2020);
 
-    buildRestAssuredWithTestToken().when()
+    buildRestAssured().when()
             .delete("/api/books/%s".formatted(book.getId()))
             .then().assertThat().log().all()
             .statusCode(OK.value());
@@ -102,7 +102,7 @@ class BookIT extends AbstractIT {
 
   @Test
   void deleteBookByIdShouldRespondNotFount() {
-    buildRestAssuredWithTestToken().when()
+    buildRestAssured().when()
             .delete("/api/books/unknown")
             .then().assertThat().log().all()
             .statusCode(NOT_FOUND.value())
@@ -112,7 +112,7 @@ class BookIT extends AbstractIT {
 
   @Test
   void updateBookByIdShouldRespondNotFount() {
-    buildRestAssuredWithTestToken().when()
+    buildRestAssured().when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {
@@ -132,7 +132,7 @@ class BookIT extends AbstractIT {
   void updateBookByIdShouldRespondOk() {
     var book = saveBook("Clean Architecture", "Robert C. Martin", BigDecimal.valueOf(600.00f), 2021);
 
-    buildRestAssuredWithTestToken().when()
+    buildRestAssured().when()
             .contentType(APPLICATION_JSON_VALUE)
             .body("""
                     {

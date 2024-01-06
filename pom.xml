@@ -12,7 +12,7 @@
 
     <groupId>com.bookDto.store</groupId>
     <artifactId>bookstore</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <name>bookstore</name>
     <description>bookstore</description>
 
@@ -32,6 +32,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-graphql</artifactId>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

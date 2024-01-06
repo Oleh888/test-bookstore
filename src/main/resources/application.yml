@@ -1,4 +1,19 @@
 auth:
-  key: c2VjcmV0LWtleQ==
+  key: ${auth.key}
   token:
-    expiration: 8
+    expiration: ${auth.token.expiration}
+
+spring:
+  data:
+    mongodb:
+      host: ${mongo.host:localhost}
+      database: ${mongo.database:bookstore}
+  flyway:
+    locations: classpath:db/schema-migration
+  datasource:
+    url: jdbc:postgresql://${postgresql.host:localhost}:${postgresql.port:5432}/${postgresql.db:bookstore}
+    username: ${postgresql.username:test}
+    password: ${postgresql.password:test}
+  graphql:
+    graphiql:
+      enabled: true

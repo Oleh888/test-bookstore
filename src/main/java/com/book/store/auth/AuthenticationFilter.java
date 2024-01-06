@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class AuthenticationFilter implements Filter {
 
   private static final String ACCESS_TOKEN_HEADER = "X-ACCESS-TOKEN";
-  private static final Set<String> ALLOWED_PATH = Set.of("/api/login", "/api/users/create");
+  private static final Set<String> ALLOWED_PATH = Set.of("/api/login", "/api/users/create", "/graphql", "/api/books");
 
   private final UserIdAccessor userIdAccessor;
   private final JwtHandler jwtHandler;
@@ -30,7 +30,7 @@ public class AuthenticationFilter implements Filter {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
     var httpServletRequest = ((HttpServletRequest) request);
-    if (ALLOWED_PATH.contains(httpServletRequest.getServletPath())) {
+    if (isPathAllowed(httpServletRequest.getServletPath())) {
       chain.doFilter(request, response);
     } else {
       Optional.ofNullable(httpServletRequest.getHeader(ACCESS_TOKEN_HEADER))
@@ -54,5 +54,9 @@ public class AuthenticationFilter implements Filter {
       log.warn("Couldn't extract details from access token", e);
       return Optional.empty();
     }
+  }
+
+  private boolean isPathAllowed(String path) {
+    return ALLOWED_PATH.stream().anyMatch(path::startsWith);
   }
 }

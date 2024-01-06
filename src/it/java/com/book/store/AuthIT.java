@@ -109,14 +109,7 @@ class AuthIT extends AbstractIT {
   void shouldRespondUnauthorizedWhenTokenIsMissed() {
     buildRestAssured().when()
             .contentType(APPLICATION_JSON_VALUE)
-            .body("""
-                    {
-                      "title": "Clean Code",
-                      "author": "Robert C. Martin",
-                      "price": 650.50,
-                      "publication-year": 2020
-                    }""")
-            .post("/api/books")
+            .get("/api/users/activity-log")
             .then().assertThat().log().all()
             .statusCode(UNAUTHORIZED.value());
   }
