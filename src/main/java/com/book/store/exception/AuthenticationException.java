@@ -1,4 +1,4 @@
-package com.book.store.auth;
+package com.book.store.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

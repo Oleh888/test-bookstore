@@ -33,15 +33,14 @@ public class AuthenticationFilter implements Filter {
     if (ALLOWED_PATH.contains(httpServletRequest.getServletPath())) {
       chain.doFilter(request, response);
     } else {
-      var httpServletResponse = (HttpServletResponse) response;
+      Optional.ofNullable(httpServletRequest.getHeader(ACCESS_TOKEN_HEADER))
+              .filter(StringUtils::hasText)
+              .flatMap(this::extractUserIdFromAccessToken)
+              .ifPresent(userIdAccessor::store);
 
-      String token = httpServletRequest.getHeader(ACCESS_TOKEN_HEADER);
-      if (StringUtils.hasText(token)) {
-        var userIdOptional = extractUserIdFromAccessToken(token);
-        if (userIdOptional.isPresent()) {
-          userIdAccessor.store(userIdOptional.get());
-          chain.doFilter(httpServletRequest, httpServletResponse);
-        }
+      var httpServletResponse = (HttpServletResponse) response;
+      if (StringUtils.hasText(userIdAccessor.get())) {
+        chain.doFilter(httpServletRequest, httpServletResponse);
       } else {
         httpServletResponse.sendError(HttpStatus.UNAUTHORIZED.value());
       }

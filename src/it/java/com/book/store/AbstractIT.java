@@ -1,6 +1,7 @@
 package com.book.store;
 
 import com.book.store.auth.JwtHandler;
+import com.book.store.auth.UserIdAccessor;
 import com.book.store.domain.BookEntity;
 import com.book.store.domain.OrderEntity;
 import com.book.store.domain.ReviewDocument;
@@ -48,8 +49,12 @@ public abstract class AbstractIT {
   @Autowired
   protected JwtHandler jwtHandler;
 
+  @Autowired
+  private UserIdAccessor userIdAccessor;
+
   @BeforeEach
   void reset() {
+    userIdAccessor.clean();
     orderRepository.deleteAll();
     userRepository.deleteAll();
     bookRepository.deleteAll();
@@ -109,6 +114,7 @@ public abstract class AbstractIT {
     var user = new UserEntity();
     user.setUsername(usernmae);
     user.setPassword(password);
+    user.setSalt(new byte[]{});
     return userRepository.save(user);
   }
 

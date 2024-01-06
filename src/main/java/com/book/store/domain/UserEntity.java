@@ -24,4 +24,5 @@ public class UserEntity {
 
   private String password;
 
+  private byte[] salt;
 }

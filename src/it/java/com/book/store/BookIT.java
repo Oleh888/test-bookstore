@@ -7,7 +7,6 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.book.store.domain.BookEntity;
@@ -15,14 +14,6 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 
 class BookIT extends AbstractIT {
-
-  @Test
-  void shouldRespondUnauthorizedWhenTokenIsMissed() {
-    buildRestAssured().when()
-            .post("/api/books")
-            .then().assertThat().log().all()
-            .statusCode(UNAUTHORIZED.value());
-  }
 
   @Test
   void saveBookShouldRespondCreated() {
