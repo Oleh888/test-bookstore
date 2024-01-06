@@ -41,9 +41,9 @@ public class BookController {
 
   @PostMapping(consumes = APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
-  public void saveBook(@RequestBody SaveBookRequest request) {
+  public BookIdentifier saveBook(@RequestBody SaveBookRequest request) {
     log.debug("Received save book request: {}", request);
-    bookService.saveBook(bookMapper.toBookDto(request));
+    return new BookIdentifier(bookService.saveBook(bookMapper.toBookDto(request)).id());
   }
 
   @DeleteMapping(value = "{id}")
@@ -63,5 +63,8 @@ public class BookController {
 
   public record SaveBookRequest(String title, String author, BigDecimal price,
                                 @JsonProperty("publication-year") Integer publicationYear) {
+  }
+
+  public record BookIdentifier(String id) {
   }
 }

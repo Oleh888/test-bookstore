@@ -28,19 +28,23 @@ public class GraphqlBookController {
   }
 
   @MutationMapping
-  public void addBook(@Argument String author, @Argument String title, @Argument Integer publicationYear, @Argument Double price) {
-    bookService.saveBook(new BookService.BookDto(null, title, author, BigDecimal.valueOf(price), publicationYear));
+  public Book addBook(@Argument String author, @Argument String title, @Argument Integer publicationYear,
+                      @Argument Double price) {
+    return bookMapper.toBookResponse(bookService.saveBook(
+            new BookService.BookDto(null, title, author, BigDecimal.valueOf(price), publicationYear)));
   }
 
   @MutationMapping
-  public void updateBook(@Argument String id, @Argument String author, @Argument String title,
-                         @Argument Integer publicationYear, @Argument Double price) {
+  public String updateBook(@Argument String id, @Argument String author, @Argument String title,
+                           @Argument Integer publicationYear, @Argument Double price) {
     bookService.updateBook(new BookService.BookDto(null, title, author, BigDecimal.valueOf(price), publicationYear), id);
+    return id;
   }
 
   @MutationMapping
-  public void deleteBook(@Argument String id) {
+  public String deleteBook(@Argument String id) {
     bookService.deleteBook(id);
+    return id;
   }
 
   public record Book(String id, String title, String author, BigDecimal price, Integer publicationYear) {

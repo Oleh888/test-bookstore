@@ -52,8 +52,9 @@ class BookServiceTest extends AbstractTest {
   void shouldSaveBook() {
     when(bookRepository.save(any(BookEntity.class))).thenReturn(getBookEntity());
 
-    bookService.saveBook(getBookDto());
+    var book = bookService.saveBook(getBookDto());
 
+    assertThat(book).extracting(BookService.BookDto::id).isEqualTo("book_id");
     verify(bookRepository, times(1)).save(any(BookEntity.class));
   }
 

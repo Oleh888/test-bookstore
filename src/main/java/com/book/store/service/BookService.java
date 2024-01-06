@@ -15,8 +15,8 @@ public class BookService {
   private final BookRepository bookRepository;
   private final BookMapper bookMapper;
 
-  public void saveBook(BookDto bookDto) {
-    bookRepository.save(bookMapper.toBookEntity(bookDto));
+  public BookDto saveBook(BookDto bookDto) {
+    return bookMapper.toBookDto(bookRepository.save(bookMapper.toBookEntity(bookDto)));
   }
 
   public BookDto getBookById(String id) {

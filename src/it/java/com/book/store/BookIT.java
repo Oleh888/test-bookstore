@@ -28,7 +28,8 @@ class BookIT extends AbstractIT {
                     }""")
             .post("/api/books")
             .then().assertThat().log().all()
-            .statusCode(CREATED.value());
+            .statusCode(CREATED.value())
+            .body("id", notNullValue());
 
     assertThat(bookRepository.findAll()).hasSize(1)
             .flatExtracting(BookEntity::getTitle, BookEntity::getAuthor, BookEntity::getPrice, BookEntity::getPublicationYear)

@@ -22,7 +22,8 @@ import jakarta.servlet.http.HttpServletResponse;
 public class AuthenticationFilter implements Filter {
 
   private static final String ACCESS_TOKEN_HEADER = "X-ACCESS-TOKEN";
-  private static final Set<String> ALLOWED_PATH = Set.of("/api/login", "/api/users/create", "/graphql", "/api/books");
+  private static final Set<String> ALLOWED_PATH =
+          Set.of("/api/login", "/api/users/create", "/graphql", "/graphiql", "/api/books");
 
   private final UserIdAccessor userIdAccessor;
   private final JwtHandler jwtHandler;
