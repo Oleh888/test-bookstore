@@ -36,7 +36,23 @@ default value is 5432.
 The `postgresql.username` and `postgresql.password` are used to specify username and password for connecting do DB.
 The default value for both username and password is test.
 
+### Building docker image locally
+
+Use the command below to build docker image.
+
+```bash
+docker build -t bookstore:local .
+```
+
+Use the command below to run bookstore application in docker container. Make sure that you have set up postgres and 
+mongo databases locally or provide connection details via environment variables (host, port, database name etc.).
+
+```bash
+docker run -p 8080:8080 -e JAVA_OPTS='-Dauth.key=c2VjcmV0LWtleQ== -Dauth.token.expiration=4' bookstore:local
+```
+
 ### Docker-compose for running locally
+Simple way to run docker image with setting up databases.
 
 ```yaml
 version: "2"
@@ -136,6 +152,9 @@ Update details of a specific book by ID. No access token is required.
 }
 ```
 
+### GET /api/books/{book_id}/review
+Retrieve a list of reviews for a specific book. Required `X-ACCESS-TOKEN` in header.
+
 ### POST /api/books/{book_id}/review
 Submit a new review for a specific book. Required `X-ACCESS-TOKEN` in header.
 
@@ -146,7 +165,7 @@ Submit a new review for a specific book. Required `X-ACCESS-TOKEN` in header.
 }
 ```
 
-### POST /api/books/{book_id}/reviews
+### POST /api/users/activity-log
 Log user activity to capture specific events or actions performed by users. Required `X-ACCESS-TOKEN` in header.
 
 ```json
