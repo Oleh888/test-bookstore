@@ -38,7 +38,7 @@ The default value for both username and password is test.
 
 ### Docker-compose for running locally
 
-<details><summary>bookstore-docker-compose.yml</summary>
+```yaml
 version: "2"
 services:
   bookstore:
@@ -66,7 +66,7 @@ services:
       - 27017:27017
     volumes:
       - ~/apps/mongo:/var/lib/postgresql/data
-</details>
+```
 
 Check the application status as, for instance:
 
