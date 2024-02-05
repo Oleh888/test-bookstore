@@ -23,8 +23,6 @@ jobs:
         image: mongo:latest
         ports:
           - "27017:27017"
-
-  testing:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
