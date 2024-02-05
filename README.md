@@ -1,7 +1,7 @@
 # Bookstore
 
-![Coverage main](home/runner/work/test-bookstore/test-bookstore/badges/jacoco.svg)
-![Branches main](home/runner/work/test-bookstore/test-bookstore/badges/branches.svg)
+![Coverage main](badges/jacoco.svg)
+![Branches main](badges/branches.svg)
 
 The service is a simple online bookstore application that allows users to browse books, view book details, and perform
 basic CRUD operations.

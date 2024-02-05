@@ -9,7 +9,7 @@ on:
       - "main"
 
 jobs:
-  integration:
+  test:
     services:
       postgres:
         image: postgres:14-alpine
@@ -25,13 +25,6 @@ jobs:
           - "27017:27017"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Checkout badges branch to a badges directory nested inside first checkout
-        uses: actions/checkout@v3
-        with:
-          ref: main
-          path: badges
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -40,14 +33,9 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn verify -PJaCoCo -PIT
-      - name: Generate JaCoCo badge
-        id: jacoco
+      - name: Generate JaCoCo Badge
         uses: cicirello/jacoco-badge-generator@v2
         with:
-            badges-directory: badges
-            generate-branches-badge: true
-            generate-summary: true
-      - name: Log coverage percentages to workflow output
-        run: |
-          echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
-          echo "branches = ${{ steps.jacoco.outputs.branches }}"
+          badges-directory: badges
+          generate-branches-badge: true
+          generate-summary: true
