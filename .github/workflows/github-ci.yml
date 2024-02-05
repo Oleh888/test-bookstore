@@ -9,9 +9,23 @@ on:
       - "main"
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  integration:
+    services:
+      postgres:
+        image: postgres:14-alpine
+        env:
+          POSTGRES_PASSWORD=test
+          POSTGRES_USER=test
+          POSTGRES_DB=bookstore
+        ports:
+          - "5432:5432"
+      mongo:
+        image: mongo:latest
+        ports:
+          - "27017:27017"
 
+  testing:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -21,4 +35,4 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn verify -PJaCoCo
+        run: mvn verify -PJaCoCo -PIT
