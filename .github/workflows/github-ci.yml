@@ -14,9 +14,9 @@ jobs:
       postgres:
         image: postgres:14-alpine
         env:
-          POSTGRES_PASSWORD=test
-          POSTGRES_USER=test
-          POSTGRES_DB=bookstore
+          POSTGRES_PASSWORD: test
+          POSTGRES_USER: test
+          POSTGRES_DB: bookstore
         ports:
           - "5432:5432"
       mongo:
